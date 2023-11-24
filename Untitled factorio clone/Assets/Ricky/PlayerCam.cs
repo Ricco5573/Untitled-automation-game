@@ -8,7 +8,7 @@ public class PlayerCam : MonoBehaviour
     private Camera mainCam;
     [SerializeField]
     private PlayerManager player;
-
+    private Transform playerPos;
     private Vector3 camOffset;
     private int minZoom = 3;
     private int maxZoom = 20;
@@ -18,6 +18,8 @@ public class PlayerCam : MonoBehaviour
     {
         mainCam = GetComponent<Camera>();
         camOffset = new Vector3(player.gameObject.transform.position.x - this.transform.position.x, 0, player.gameObject.transform.position.z - this.transform.position.z);
+        Debug.Log(camOffset);
+        playerPos = player.gameObject.transform;
     }
 
     // Update is called once per frame
@@ -38,35 +40,6 @@ public class PlayerCam : MonoBehaviour
             player.GetRotation(hit.point);
         }
 
-        float differenceX = player.gameObject.transform.position.x - this.transform.position.x;
-        float differenceZ = player.gameObject.transform.position.z - this.transform.position.z;
-        if (differenceX != 0 )
-        {
-
-            if (differenceX > 0)
-            {
-                this.transform.position = new Vector3(this.transform.position.x - differenceX, this.transform.position.y, this.transform.position.z);
-            }
-            else 
-            {
-                this.transform.position = new Vector3(this.transform.position.x + differenceX, this.transform.position.y, this.transform.position.z);
-
-            }
-        }
-        if (differenceZ != 0)
-        {
-            if (differenceZ > 0)
-            {
-                this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z - differenceZ);
-
-            }
-            else
-            {
-                this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z + differenceZ);
-
-            }
-
-        }
 
     }
 
@@ -87,5 +60,9 @@ public class PlayerCam : MonoBehaviour
         {
             return true;
         }
+    }
+    private void LateUpdate()
+    {
+        this.gameObject.transform.position = new Vector3(playerPos.position.x - camOffset.x, this.gameObject.transform.position.y, playerPos.position.z - camOffset.z);
     }
 }
