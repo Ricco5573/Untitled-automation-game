@@ -11,14 +11,14 @@ public class PlayerCam : MonoBehaviour
     private Transform playerPos;
     private Vector3 camOffset;
     private int minZoom = 3;
-    private int maxZoom = 20;
+    private int maxZoom = 8;
     private bool zoom;
     // Start is called before the first frame update
     void Start()
     {
         mainCam = GetComponent<Camera>();
         camOffset = new Vector3(player.gameObject.transform.position.x - this.transform.position.x, 0, player.gameObject.transform.position.z - this.transform.position.z);
-        Debug.Log(camOffset);
+
         playerPos = player.gameObject.transform;
     }
 
