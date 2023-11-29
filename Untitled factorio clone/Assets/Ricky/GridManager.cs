@@ -1,11 +1,12 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    private GameObject[,] grid = new GameObject[1000, 1000];
+    private Tile[,] grid = new Tile[1500, 1500];
     [SerializeField]
     private float tilesize;
     [SerializeField]
@@ -18,27 +19,68 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         Debug.Log("start");
-        StartCoroutine(GenerateGrid(renderdistance, new Vector3(-250 * tilesize, 0, -250 * tilesize)));
+        StartCoroutine(GenerateGrid(renderdistance, new Vector3(-100 * tilesize, 0, -100 * tilesize)));
     }
 
     private IEnumerator GenerateGrid(int Size, Vector3 start)
     {
 
         Debug.Log("Start Generation");
-        for (int v = 0; v <= Size; v++)
+        for (int v = 1; v <= Size; v++)
         {
 
-            Debug.Log("Row " + v);
 
             for (int h = 1; h <= Size; h++)
             {
 
-                GameObject tiled = Instantiate(tile, new Vector3(start.x + (h * tilesize), 0, start.z + (v * tilesize)), Quaternion.identity);
-                grid[v, h] = tiled;
+                GameObject tiled = Instantiate(tile, new Vector3(start.x + (h * tilesize ), 0, start.z + (v * tilesize)), Quaternion.identity);
+                grid[v, h] = tiled.GetComponent<Tile>();
+                tiled.GetComponent<Tile>().SetGridManager(this, v, h);
 
             }
-            yield return new WaitForSecondsRealtime(0.002f);
         }
+        Debug.Log("Finish generation");
         yield return new WaitForEndOfFrame();
+    }
+
+    public bool IsWater(int x, int y)
+    {
+        if (x > 0 && y > 0 && grid[x,y] != null)
+        {
+            return grid[x, y].GetWater();
+
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public Transform GetPlayerPos()
+    {
+        return Player;
+    }
+    public void Spread(int x, int y)
+    {
+        if (x > 0 && y > 0)
+        {
+
+            if (grid[x - 1, y] != null&& !grid[x-1, y].GetAlive() && !grid[x - 1, y].GetWater() )
+            {
+                grid[x - 1, y].SetAlive(true);
+            }
+            if (grid[x + 1, y] != null && !grid[x + 1, y].GetAlive() && !grid[x + 1, y].GetWater() )
+            {
+                grid[x + 1, y].SetAlive(true);
+            }
+            if (grid[x, y - 1] != null && !grid[x, y - 1].GetWater() && !grid[x, y - 1].GetWater() )
+            {
+                grid[x, y - 1].SetAlive(true);
+            }
+            if (grid[x, y + 1] != null && !grid[x, y + 1].GetAlive() && !grid[x, y + 1].GetWater())
+            {
+                grid[x,y + 1].SetAlive(true);
+            }
+        }
     }
 }

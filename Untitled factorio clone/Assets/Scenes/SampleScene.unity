@@ -335,8 +335,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fa5b322bd5687b4885a1e34457c99f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilesize: 0.2
-  renderdistance: 500
+  tilesize: 2
+  renderdistance: 200
   tile: {fileID: 6059462203704900183, guid: ecebaa9fc08a8f449aadfaeb420d9b5c, type: 3}
   Player: {fileID: 1022057560}
 --- !u!1 &963194225
@@ -575,7 +575,7 @@ Transform:
   m_GameObject: {fileID: 1022057554}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.48, z: -0.63}
+  m_LocalPosition: {x: -0.88, y: 1.48, z: -2.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -594,8 +594,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e416f8bc6c492e41b04a04273c67d2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 0.005
-  sprintSpeed: 0
+  movementSpeed: 0.2
+  sprintSpeed: 0.4
   health: 100
   character: {fileID: 1022057556}
 --- !u!54 &1022057562
