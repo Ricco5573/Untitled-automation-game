@@ -1,0 +1,12 @@
+public enum Items
+{
+	OIL,
+	COAL,
+	IRON,
+	MINER,
+	SMELTER,
+	GENERATOR,
+	SPRINKLER,
+	PUMP,
+	REFINERY
+}
