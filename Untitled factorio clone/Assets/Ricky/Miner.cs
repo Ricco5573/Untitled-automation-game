@@ -20,15 +20,21 @@ public class Miner : Building
                 Tile tile = hit.collider.gameObject.GetComponent<Tile>();
                 if (tile.GetAlive())
                 {
-                    if (tile.GetNode() == 2)
+                    if (tile.GetNode() == 2 || tile.GetNode() == 1)
                     {
                         canPlace = true;
                         ironNode = tile.GetOreNode();
+                        if (!ironNode.GetBeset())
+                        {
+                            indicator.GetComponent<Renderer>().material = green;
+                        }
+                        }
                     }
-                }
                 else
                 {
                     canPlace = false;
+                    indicator.GetComponent<Renderer>().material = red;
+
                 }
             }
             }
@@ -36,6 +42,7 @@ public class Miner : Building
         {
             if (!farming)
             {
+                Destroy(indicator.gameObject);
                 StartCoroutine(farm());
             }
             
@@ -45,6 +52,7 @@ public class Miner : Building
     private IEnumerator farm()
     {
         farming = true;
+        ironNode.SetBeset(true);
         while(ironNode.getAmount() > 0)
         {
             yield return new WaitForSecondsRealtime(0.5f);

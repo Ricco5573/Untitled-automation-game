@@ -8,7 +8,10 @@ public class Building : GridObject
 
     protected bool placing, canPlace;
     private PlayerCam pCam;
-    
+    [SerializeField]    
+    protected GameObject indicator;
+    [SerializeField]
+    protected Material green, red;
     // Update is called once per frame
     //
     //

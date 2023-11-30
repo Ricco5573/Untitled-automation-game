@@ -8,6 +8,7 @@ public class OreNode : GridObject
 {
     [SerializeField]
     private int type; //1 = iron, 2 = coal, 3 = oil
+    [SerializeField]
     private int amount;
     private bool beset;
     [SerializeField]
@@ -37,6 +38,10 @@ public class OreNode : GridObject
     public void SetBeset(bool set)
     {
         beset = set;
+    }
+    public bool GetBeset() {
+
+        return beset;
     }
 
     public void SetType(int ore) 

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - GridManager
   - Fire
+  - Item
   layers:
   - Default
   - TransparentFX

@@ -10,12 +10,12 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private float sprintSpeed;
     [SerializeField]
-    private int health = 100;
+    private int health = 100, fireAmount = 900;
     [SerializeField]    
     private CharacterController character;
     [SerializeField]
     private PlayerCam cam;
-    private bool sprinting;
+    private bool sprinting, firing;
     [SerializeField]
     private GameObject miner, pump, furnace, generator, refinery, belt, pipe, sprinkler, place, fireCol;
     private bool placing = false;
@@ -40,22 +40,55 @@ public class PlayerManager : MonoBehaviour
         if(!placing && Input.GetKeyDown(KeyCode.Mouse0))
         {
             fireCol.SetActive(true);
+            firing = true;
         }
 
-        if (Input.GetKeyUp(KeyCode.Mouse0))
+        if (Input.GetKeyUp(KeyCode.Mouse0) || fireAmount <= 0)
         {
             fireCol.SetActive(false);
+            firing = false;
+        }
+        else if(Input.GetKeyUp(KeyCode.Mouse1) && placing) {
+
+            placing = false;
+            Destroy(place.gameObject);
+        }
+        if(placing && Input.GetKeyDown(KeyCode.R))
+        {
+            place.gameObject.transform.Rotate(place.transform.rotation.x, place.transform.rotation.y + 90, place.transform.rotation.z);
 
         }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (firing)
         {
-            place = Instantiate(miner, new Vector3(0, 0.5f, 0), Quaternion.identity);
-            placing = true;
-            Building build = place.GetComponent<Building>();
-            build.SetpCam(cam);
-            build.SetPlacing(true);
+            fireAmount -= 5;
         }
-        if(Input.GetAxis("Sprint") > 0.5f)
+        else
+        {
+            fireAmount++;
+        }
+
+        if (!placing)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                place = Instantiate(miner, new Vector3(0, 0.5f, 0), Quaternion.identity);
+                placing = true;
+                Building build = place.GetComponent<Building>();
+                build.SetpCam(cam);
+                build.SetPlacing(true);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                place = Instantiate(pump, new Vector3(0, 0.5f, 0), Quaternion.identity);
+                placing = true;
+                Building build = place.GetComponent<Building>();
+                build.SetpCam(cam);
+                build.SetPlacing(true);
+            }
+
+        }
+
+            if (Input.GetAxis("Sprint") > 0.5f)
         {
             sprinting = true;
             Debug.Log("Sprinting");
