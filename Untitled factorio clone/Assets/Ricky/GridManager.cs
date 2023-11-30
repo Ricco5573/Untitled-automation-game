@@ -43,6 +43,16 @@ public class GridManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
     }
 
+    public Vector3 GetNearestTile(Transform position)
+    {
+        float x = 100 + (position.position.x / tilesize);
+        float z = 100 + (position.position.z / tilesize);
+
+
+        return grid[(int)z, (int)x].gameObject.transform.position;
+
+    }
+
     public bool IsWater(int x, int y)
     {
         if (x > 0 && y > 0 && grid[x,y] != null)
@@ -69,15 +79,15 @@ public class GridManager : MonoBehaviour
             {
                 grid[x - 1, y].SetAlive(true);
             }
-            if (grid[x + 1, y] != null && !grid[x + 1, y].GetAlive() && !grid[x + 1, y].GetWater() )
+            else if (grid[x + 1, y] != null && !grid[x + 1, y].GetAlive() && !grid[x + 1, y].GetWater() )
             {
                 grid[x + 1, y].SetAlive(true);
             }
-            if (grid[x, y - 1] != null && !grid[x, y - 1].GetWater() && !grid[x, y - 1].GetWater() )
+            else if (grid[x, y - 1] != null && !grid[x, y - 1].GetAlive() && !grid[x, y - 1].GetWater() )
             {
                 grid[x, y - 1].SetAlive(true);
             }
-            if (grid[x, y + 1] != null && !grid[x, y + 1].GetAlive() && !grid[x, y + 1].GetWater())
+            else if (grid[x, y + 1] != null && !grid[x, y + 1].GetAlive() && !grid[x, y + 1].GetWater())
             {
                 grid[x,y + 1].SetAlive(true);
             }

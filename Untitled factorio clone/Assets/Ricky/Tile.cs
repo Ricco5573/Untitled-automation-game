@@ -6,16 +6,23 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     [SerializeField]
-    private Material grass, water;
+    private Material grass, water, dead;
     private GridManager grid;
     private int x, z;
     private bool isWater;
+    [SerializeField]
     private bool alive;
+    [SerializeField]
     private bool isGrowing;
-    private Coroutine growth, inst;
+    private Coroutine growth, inst, burn;
     private bool instantiated;
     private bool inArea;
     private int timer;
+    [SerializeField]
+    private GameObject waterCol;
+    private GameObject node, building;
+    [SerializeField]
+    private GameObject coalNode, ironNode, oilNode;
     // Start is called before the first frame update
     void Start()
     {
@@ -111,7 +118,46 @@ public class Tile : MonoBehaviour
                 break;
 
         }
+        if (RandomChance(0.5f))
+        {
+            int randomint = UnityEngine.Random.Range(1, 3);
+            switch (randomint){
+                case 1: node =  Instantiate(coalNode, this.gameObject.transform.position, Quaternion.identity);  break;
+                case 2: node =  Instantiate(ironNode, this.gameObject.transform.position, Quaternion.identity); break;
+                case 3: node =  Instantiate(oilNode, this.gameObject.transform.position, Quaternion.identity); break;
+                default: break;
+
+            }
+            node.GetComponent<OreNode>().Instantiate();
+        }
+
         StopCoroutine(inst);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "Fire" && alive)
+        {
+            burn = StartCoroutine(burning());
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.tag == "Fire" && alive && burn != null)
+        {
+            StopCoroutine(burn);
+        }
+    }
+    private IEnumerator burning()
+    {
+        Debug.Log("Burning");
+        yield return new WaitForSecondsRealtime(0.2f);
+        alive = false;
+        this.gameObject.GetComponent<Renderer>().material = dead;
+        StopCoroutine(Grow());
+        isGrowing = false;
+        StopCoroutine(burn);
+
     }
     private void LateUpdate()
     {
@@ -142,6 +188,8 @@ public class Tile : MonoBehaviour
             isWater = false;
             alive = true;
             this.gameObject.GetComponent<Renderer>().material = grass;
+            waterCol.SetActive(false) ;
+
         }
         else
         {
@@ -150,17 +198,25 @@ public class Tile : MonoBehaviour
             isWater = true;
             alive = false;
             this.gameObject.GetComponent<Renderer>().material = water;
+            waterCol.SetActive(true);
         }
     }
 
     private IEnumerator Grow()
     {
-        isGrowing= true;
-        yield return new WaitForSecondsRealtime(20);
-        grid.Spread(x, z);
+        isGrowing = true;
+        while (isGrowing && alive)
+        {
+            yield return new WaitForSecondsRealtime(UnityEngine.Random.Range(25, 55));
+            Debug.Log("Growing: " + alive);
+            if (alive)
+            {
+                grid.Spread(x, z);
+            }
+        }
 
-    }
-    private bool RandomChance(float chance)
+        }
+        private bool RandomChance(float chance)
     {
         int seed = UnityEngine.Random.Range(0, 10000);
         float hack = chance * 100f;
@@ -180,8 +236,18 @@ public class Tile : MonoBehaviour
         x = X;
         z = Z;
     }
-
-    public bool GetWater()
+    public int GetNode()
+    {
+        if (node != null)
+        {
+            return node.GetComponent<OreNode>().GetType();
+        }
+        else
+        {
+            return 0;
+        }
+    }
+        public bool GetWater()
     {
         return isWater;
     }
@@ -191,7 +257,15 @@ public class Tile : MonoBehaviour
     }
     public void SetAlive(bool isAlive)
     {
-        alive = isAlive;    
-    }
+        alive = isAlive;
+        if (alive)
+        {
+            this.gameObject.GetComponent<Renderer>().material = grass;
 
+        }
+    }
+    public OreNode GetOreNode()
+    {
+        return node.GetComponent<OreNode>();
+    }
 }

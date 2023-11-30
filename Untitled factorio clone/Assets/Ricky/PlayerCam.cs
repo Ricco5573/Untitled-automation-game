@@ -8,6 +8,7 @@ public class PlayerCam : MonoBehaviour
     private Camera mainCam;
     [SerializeField]
     private PlayerManager player;
+
     private Transform playerPos;
     private Vector3 camOffset;
     private int minZoom = 3;
@@ -32,14 +33,6 @@ public class PlayerCam : MonoBehaviour
         {
             mainCam.orthographicSize += -scroll * 2;
         }
-        RaycastHit hit;
-        Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            player.GetRotation(hit.point);
-        }
-
 
     }
 
@@ -64,5 +57,16 @@ public class PlayerCam : MonoBehaviour
     private void LateUpdate()
     {
         this.gameObject.transform.position = new Vector3(playerPos.position.x - camOffset.x, this.gameObject.transform.position.y, playerPos.position.z - camOffset.z);
+    }
+    public Vector3 GetMousePos()
+    {
+        RaycastHit hit;
+        Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            return hit.point;
+        }
+        else return new Vector3(0,0,0);
     }
 }
