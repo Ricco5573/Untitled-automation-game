@@ -57,12 +57,5 @@ public class Inventory : MonoBehaviour
         return canBeRemoved;
 	}
 
-    private void Awake()
-    {
-        InitializeInventory();
-        inventory[Items.GENERATOR] += 2;
-        inventory[Items.MINER] += 2;
-        inventory[Items.SMELTER] += 1;
-        inventory[Items.PUMP] += 1;
-    }
+    private void Awake() => InitializeInventory();
 }
